@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Home</title>
+    <style>
+        body {
+            background-image: linear-gradient(to bottom, #007BFF, #87CEEB, #FFFFFF); 
+            display: flex;
+            flex-direction: column; 
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            text-align: center; 
+            position: relative; 
+        }
+        h1 {
+            font-size: 2.5em; 
+            color: #191970; 
+            margin-bottom: 20px; 
+        }
+        .button-container {
+            display: flex;
+            gap: 40px; 
+            position: relative; 
+        }
+        .button {
+            padding: 40px 60px; 
+            font-size: 20px; 
+            color: white;
+            background-color: #007BFF; 
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none; 
+            text-align: center;
+            position: relative; 
+        }
+        .button:hover {
+            background-color: #0056b3; 
+        }
+        .button:after {
+            content: "Vai"; 
+            position: absolute;
+            left: 50%;
+            bottom: 80%; 
+            transform: translateX(-50%);
+            background-color: black; 
+            color: white;
+            padding: 5px 10px;
+            border-radius: 5px;
+            opacity: 0; 
+            transition: opacity 0.3s; 
+            visibility: hidden; 
+        }
+        
+        .arrow {
+            margin-left: 10px; 
+        }
+        .logo {
+            position: absolute; 
+            top: 50px; 
+            left: 680px; 
+            width: 200px; 
+        }
+
+        /* Stile per il footer */
+        #footer {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 14px;
+            color: black;
+        }
+
+        /* Stile per il dropdown */
+        .dropdown {
+            position: relative;
+            display: inline-block;
+        }
+
+        .dropdown-content {
+            display: none;
+            position: absolute;
+            background-color: #6495ED; 
+            min-width: 200px;
+            z-index: 1;
+        }
+
+        .dropdown:hover .dropdown-content {
+            display: block; 
+        }
+
+        .dropdown-content a {
+            color: white; 
+            padding: 20px; 
+            text-decoration: none; 
+            display: block; 
+            text-align: center; 
+        }
+
+        .dropdown-content a:hover {
+            background-color: #0056b3; 
+        }
+    </style>
+</head>
+<body>
+
+     <img src="ByPaola.png" alt="Created da Paola" class="logo">
+    <h1>Calcolo oneri di urbanizzazione e costo di costruzione </h1>
+    <br><br><br><br>
+    <div class="button-container">
+        <div class="dropdown">
+            <button class="button">Oneri di Urbanizzazione<span class="arrow"></span></button>
+            <div class="dropdown-content">
+                <a href="A/Zone_Produttive.html">Zone Produttive (mq)</a>
+                <a href="B/Zone_Residenziali.html">Altre zone (mc)</a>
+            </div>
+        </div>
+        <div class="dropdown">
+            <button class="button">Costo di Costruzione<span class="arrow"></span></button>
+            <div class="dropdown-content">
+                <a href="C/costruzione.html">Edilizia Abitativa</a>
+                <a href="D/produttive.html">Edilizia Direzionale Commerciale e Turistica</a>
+                
+				<a href="E/Ristrutturazione2.html">Ristrutturazione</a>
+
+            </div>
+        </div>
+    </div>
+	
+
+    <div id="footer"> Disclaimer <br>
+La presente pagina web è stata creata a scopo puramente ricreativo e di intrattenimento. 
+<br> Le informazioni e i contenuti presenti non hanno valore professionale, ufficiale o vincolante. 
+<br> L'autore non si assume alcuna responsabilità per eventuali errori, omissioni o interpretazioni errate dei contenuti.</div>
+
+</body>
+</html>

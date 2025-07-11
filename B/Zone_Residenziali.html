@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Altre Zone (mc)</title>
+    <style>
+         body {
+            background: linear-gradient(to bottom, blue, lightblue, white);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 180px;
+			position: relative;
+            overflow-y: auto;
+        }
+
+        
+        #hiddenTable {
+            display: none; 
+        }
+
+        
+        button {
+            padding: 10px 15px;
+            background-color: #87cefa;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+			 display: inline-block;
+        }
+
+        button:hover {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        
+
+        
+        #footer {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 14px;
+            color: black;
+        }
+
+        
+        select, input[type="number"] {
+            font-size: 16px;
+            padding: 10px;
+            margin: 5px; 
+            width: 300px; 
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        
+        @media print {
+            body {
+                padding: 0; 
+                text-align: left; 
+            }
+
+            button {
+                display: none; 
+            }
+
+            #footer {
+                position: static; 
+                bottom: auto; 
+                right: auto; 
+            }
+
+            
+            #hiddenTable {
+                display: none; 
+            }
+
+             
+    /* .logo {
+        display: none; 
+    } */
+
+            h1, h2, label {
+                /* Rimuovi page-break-after per consentire interruzioni naturali */
+            }
+        }
+    </style>
+</head>
+<body>
+    
+
+     
+    <div style="text-align: left;">
+        <button id="homeBtn" onclick="location.href= '../index.html'">🏠 Home</button>
+    </div>
+	
+    <h1>Calcolo Oneri di Urbanizzazione</h1>
+
+    <label for="rowSelect">Seleziona la tipologia residenziale:</label>
+    <select id="rowSelect">
+        <option value="0">Nuove costruzioni</option>
+        <option value="1">Idem 1 (fino a 3 piani)</option>
+        <option value="2">Idem 1 (oltre 3 piani)</option>
+        <option value="3">p.e.e.p.</option>
+        <option value="4">Edilizia Turistica Residenziale</option>
+        <option value="5">Edilizia Turistica Produttiva</option>
+        <option value="6">Edilizia Direzionale</option>
+        <option value="7">Edifici unifamiliari: restauri e ristrutturazioni</option>
+        <option value="8">Ristrutturazione con mutamento di destinazione d'uso</option>
+        <option value="9">Ristrutturazione senza mutamento di destinazione d'uso</option>
+        <option value="10">Ristrutturazione con aumento di superfici e senza mutamento di destinazione d'uso</option>
+        <option value="11">Ristrutturazione con aumento di superfici e mutamento di destinazione d'uso</option>
+    </select>
+    <br><br>
+
+    <label for="columnSelect">Seleziona la zona:</label>
+    <select id="columnSelect">
+        <option value="0">A</option>
+        <option value="1">B</option>
+        <option value="2">C</option>
+        <option value="3">D - Non Produttive</option>
+        <option value="4">E</option>
+        <option value="5">F e G</option>
+        <option value="6">Z. TP ZONE A FORTE DEP. GEOL.</option>
+    </select>
+
+    <br><br>
+    <label for="metriCubici">Inserisci i metri cubi:</label>
+    <input type="number" id="metriCubici" placeholder="Metri Cubici" required>
+
+    <br><br>
+    <label for="riduzioni">Riduzioni (€):</label>
+    <input type="number" id="riduzioni" placeholder="Riduzioni" value="0">
+
+    <br><br>
+    <button id="calculateBtn">Calcola</button><!-- Pulsante calcola -->
+    <button id="resetBtn">Reset</button> <!-- Pulsante Reset -->
+    <button id="printBtn" onclick="printResults()">Stampa</button> <!-- Pulsante Stampa -->
+
+    <h2>Risultato: <span id="result">0 €</span></h2>
+    <h3 id="calculationDetails"></h3> <!-- Dettagli del calcolo -->
+    <br><br>
+
+    <!-- Tabella nascosta -->
+    <table id="hiddenTable">
+        <tr>
+            <td>9.10</td><td>12.74</td><td>18.20</td><td>18.20</td><td>15.47</td><td>13.65</td><td>5.46</td>
+        </tr>
+        <tr>
+            <td>8.19</td><td>11.83</td><td>14.56</td><td>16.58</td><td>0.00</td><td>12.74</td><td>4.55</td>
+        </tr>
+        <tr>
+            <td>7.28</td><td>10.92</td><td>15.47</td><td>14.56</td><td>0.00</td><td>11.83</td><td>0.00</td>
+        </tr>
+        <tr>
+            <td>6.37</td><td>8.19</td><td>12.74</td><td>0.00</td><td>0.00</td><td>10.92</td><td>0.00</td>
+        </tr>
+        <tr>
+            <td>10.01</td><td>13.65</td><td>18.20</td><td>0.00</td><td>0.00</td><td>14.56</td><td>0.00</td>
+        </tr>
+        <tr>
+            <td>8.19</td><td>10.01</td><td>13.65</td><td>13.65</td><td>0.00</td><td>12.74</td><td>0.00</td>
+        </tr>
+        <tr>
+            <td>18.20</td><td>18.20</td><td>18.20</td><td>18.20</td><td>0.00</td><td>12.74</td><td>0.00</td>
+        </tr>
+        <tr>
+            <td>6.37</td><td>8.19</td><td>10.01</td><td>11.83</td><td>11.83</td><td>12.74</td><td>1.82</td>
+        </tr>
+        <tr>
+            <td>3.64</td><td>4.55</td><td>5.46</td><td>2.73</td><td>6.37</td><td>6.37</td><td>1.82</td>
+        </tr>
+        <tr>
+            <td>7.28</td><td>6.37</td><td>8.19</td><td>6.37</td><td>8.19</td><td>8.19</td><td>3.64</td>
+        </tr>
+        <tr>
+            <td>8.19</td><td>6.37</td><td>8.19</td><td>8.19</td><td>9.10</td><td>9.10</td><td>2.73</td>
+        </tr>
+        <tr>
+            <td>10.01</td><td>9.10</td><td>10.01</td><td>8.19</td><td>10.01</td><td>7.28</td><td>4.55</td>
+        </tr>
+    </table>
+
+    
+    <div id="footer"> Disclaimer <br>
+
+La presente pagina web è stata creata a scopo puramente ricreativo e di intrattenimento. 
+<br> Le informazioni e i contenuti presenti non hanno valore professionale, ufficiale o vincolante. 
+<br> L'autore non si assume alcuna responsabilità per eventuali errori, omissioni o interpretazioni errate dei contenuti.
+</div>
+
+    <script>
+      document.getElementById('calculateBtn').addEventListener('click', function() {
+    const row = document.getElementById('rowSelect').value;
+    const column = document.getElementById('columnSelect').value;
+    const metriCubici = document.getElementById('metriCubici').value;
+    const riduzioni = document.getElementById('riduzioni').value || 0;
+
+    // Recupera il valore dalla tabella nascosta
+    const table = document.getElementById('hiddenTable');
+    const value = table.rows[row].cells[column].innerText;
+
+    // Calcola 
+    const calcoloBase = metriCubici * value;
+    const result = calcoloBase - riduzioni;
+
+    // Formatta il risultato
+    const formattedResult = result.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+
+    // Aggiorna il risultato e i dettagli del calcolo
+    document.getElementById('result').innerText = formattedResult + ' €'; 
+    document.getElementById('calculationDetails').innerText = `Calcolo: (${metriCubici} * ${value}) - ${riduzioni} = ${formattedResult} €`;
+});
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            document.getElementById('rowSelect').selectedIndex = 0;
+            document.getElementById('columnSelect').selectedIndex = 0;
+            document.getElementById('metriCubici').value = '';
+            document.getElementById('riduzioni').value = 0; 
+            document.getElementById('result').innerText = '0 €'; 
+            document.getElementById('calculationDetails').innerText = ''; 
+        });
+
+        // Stampa dei risultati
+        function printResults() {
+            const footer = document.getElementById('footer');
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => button.style.display = 'none'); // Nascondi i pulsanti
+            footer.style.display = 'none'; // Nascondi il footer
+
+            window.print(); // Stampa la pagina
+
+            buttons.forEach(button => button.style.display = 'inline-block'); 
+            footer.style.display = 'block'; 
+        }
+
+        // conseguenze dei tasti
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('calculateBtn').click(); // Simula "Calcola"
+            }
+            
+        });
+    </script>
+</body>
+</html>

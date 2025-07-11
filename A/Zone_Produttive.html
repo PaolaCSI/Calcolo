@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zone Produttive (mq)</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, blue, lightblue, white);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 200px;
+			position: relative;
+            overflow-y: auto;
+        }
+
+        /* tabella */
+        #hiddenTable {
+            display: none; 
+        }
+
+        /* Stile pulsanti */
+        button {
+            padding: 10px 15px;
+            background-color: #87cefa;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+			 display: inline-block;
+        }
+
+        button:hover {
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+
+        
+
+        /* Stile x footer */
+        #footer {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 14px;
+            color: black;
+        }
+
+        /* Stile x le azioni */
+        select, input[type="number"] {
+            font-size: 16px;
+            padding: 10px;
+            margin: 5px; 
+            width: 300px; 
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        /* Stili x stampa */
+        @media print {
+            body {
+                padding: 0; 
+                text-align: left; 
+            }
+
+            button {
+                display: none; 
+            }
+
+            #footer {
+                position: static; 
+                bottom: auto; 
+                right: auto; 
+            }
+
+            
+            #hiddenTable {
+                display: none; /* Mantieni la tabella nascosta per la stampa */
+            }
+
+             */
+
+            h1, h2, label {
+                /* Rimuovi page-break-after per consentire interruzioni naturali */
+            }
+        }
+    </style>
+</head>
+<body>
+    
+
+    
+    <div style="text-align: left;">
+        <button id="homeBtn" onclick="location.href= '../index.html'">🏠 Home</button>
+    </div>
+
+    <h1>Calcolo Oneri di Urbanizzazione</h1>
+
+    <label for="rowSelect">Seleziona il tipo produttivo:</label>
+    <select id="rowSelect">
+        <option value="0">Tessili, Carta, Cartotecnica, Calzature, Alimentari, Legnami</option>
+        <option value="1">Chimici</option>
+        <option value="2">Metallici</option>
+        <option value="3">Artigianato</option>
+        <option value="4">Estrattivi</option>
+        <option value="5">Servizi</option>
+        <option value="6">Altre industrie</option>
+    </select>
+    <br><br>
+
+    <label for="columnSelect">Seleziona la tipologia di insediamento:</label>
+    <select id="columnSelect">
+        <option value="0">Ampliamenti</option>
+        <option value="1">Nuovi insediamenti zone D</option>
+        <option value="2">Nuovi insediamenti zone miste</option>
+        <option value="3">Nuovi insediamenti zone artigianali</option>
+        <option value="4">Nuovi insediamenti P.I.P.</option>
+    </select>
+
+    <br><br>
+    <label for="metriQuadrati">Inserisci i metri quadrati:</label>
+    <input type="number" id="metriQuadrati" placeholder="Metri Quadrati" required>
+
+    <br><br>
+    <label for="riduzioni">Riduzioni (€):</label>
+    <input type="number" id="riduzioni" placeholder="Riduzioni" value="0">
+
+    <br><br>
+    <button id="calculateBtn">Calcola</button>
+    <button id="resetBtn">Reset</button>
+    <button id="printBtn" onclick="printResults()">Stampa</button>
+
+    <h2>Risultato: <span id="result">0 €</span></h2>
+    <h3 id="calculationDetails"></h3> 
+
+    <!-- Tabella nascosta -->
+    <table id="hiddenTable">
+        <tr>
+            <td>7.17</td><td>12.90</td><td>12.90</td><td>12.90</td><td>11.47</td>
+        </tr>
+        <tr>
+            <td>14.34</td><td>14.34</td><td>14.34</td><td>14.34</td><td>12.90</td>
+        </tr>
+        <tr>
+            <td>10.03</td><td>11.47</td><td>11.47</td><td>10.03</td><td>10.03</td>
+        </tr>
+        <tr>
+            <td>4.30</td><td>8.60</td><td>7.88</td><td>7.17</td><td>6.45</td>
+        </tr>
+        <tr>
+            <td>4.30</td><td>7.17</td><td>7.17</td><td>7.17</td><td>5.73</td>
+        </tr>
+        <tr>
+            <td>5.73</td><td>11.47</td><td>10.75</td><td>12.90</td><td>10.03</td>
+        </tr>
+        <tr>
+            <td>5.73</td><td>11.47</td><td>10.75</td><td>12.90</td><td>10.03</td>
+        </tr>
+    </table>
+
+    
+    <div id="footer"> Disclaimer <br>
+
+La presente pagina web è stata creata a scopo puramente ricreativo e di intrattenimento. 
+<br> Le informazioni e i contenuti presenti non hanno valore professionale, ufficiale o vincolante. 
+<br> L'autore non si assume alcuna responsabilità per eventuali errori, omissioni o interpretazioni errate dei contenuti.
+</div>
+
+    <script>
+       document.getElementById('calculateBtn').addEventListener('click', function() {
+    const row = document.getElementById('rowSelect').value;
+    const column = document.getElementById('columnSelect').value;
+    const metriQuadrati = document.getElementById('metriQuadrati').value;
+    const riduzioni = document.getElementById('riduzioni').value;
+
+    
+    const table = document.getElementById('hiddenTable');
+    const value = table.rows[row].cells[column].innerText;
+
+    
+    const result = (metriQuadrati * value) - riduzioni;
+
+    
+    const formattedResult = result.toLocaleString('it-IT', {
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2
+    });
+
+    document.getElementById('result').innerText = formattedResult + ' €';
+
+    
+    const calculationDetails = `Calcolo: (${metriQuadrati} m² * ${value} €) - ${riduzioni} € = ${formattedResult} €`;
+    document.getElementById('calculationDetails').innerText = calculationDetails;
+});
+
+        document.getElementById('resetBtn').addEventListener('click', function() {
+            // Azzera i valori
+            document.getElementById('rowSelect').selectedIndex = 0;
+            document.getElementById('columnSelect').selectedIndex = 0;
+            document.getElementById('metriQuadrati').value = '';
+            document.getElementById('riduzioni').value = '0'; 
+            document.getElementById('result').innerText = '0 €';
+            document.getElementById('calculationDetails').innerText = ''; 
+        });
+
+        
+        function printResults() {
+            const footer = document.getElementById('footer');
+            const buttons = document.querySelectorAll('button');
+            buttons.forEach(button => button.style.display = 'none'); 
+            footer.style.display = 'none'; 
+
+            window.print(); 
+
+            buttons.forEach(button => button.style.display = 'inline-block'); 
+            footer.style.display = 'block'; 
+        }
+
+        
+        document.addEventListener('keydown', function(event) {
+            if (event.key === 'Enter') {
+                document.getElementById('calculateBtn').click(); // Simula il clic sul pulsante "Calcola"
+            }
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costruzione - Ristrutturazione</title>
+    <style>
+        body {
+            background: linear-gradient(to bottom, blue, lightblue, white);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 50px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        
+        .button {
+            padding: 10px 15px;
+            background-color: #87cefa;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .button.selected {
+            background-color: #00FF00; 
+        }
+
+        input, select {
+            padding: 10px;
+            margin-top: 5px;
+            width: 400px;
+            font-size: 16px;
+        }
+
+        
+        #footer {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 14px;
+            color: black;
+        }
+
+        .inline {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        
+        .row {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        
+        .highlight {
+            background-color: #5F9EA0; 
+        }
+    </style>
+</head>
+<body>
+
+
+<div style="text-align: left; margin-top: 10px;">
+    <button class="button" id="homeBtn" onclick="location.href='../index.html'">🏠 Home</button>
+</div>
+
+<h1>Calcolo Costo di Costruzione - Ristrutturazione</h1>
+
+
+<div id="ediliziaAbitativa" style="display:block;">
+    <label>Seleziona tipo di ristrutturazione:</label>
+    <div>
+        <button class="button" data-aliquota="1.00" onclick="selezionaTipo(this, '1.00', 'Ristrutturazione totale con accorpamento e variazione della destinazione d’uso')">Totale con accorpamento +  variazione d’uso</button>
+        <button class="button" data-aliquota="0.80" onclick="selezionaTipo(this, '0.80', 'Ristrutturazione totale con accorpamento senza variazione della destinazione d’uso')">Totale con accorpamento senza variazione d’uso</button>
+        <button class="button" data-aliquota="0.80" onclick="selezionaTipo(this, '0.80', 'Ristrutturazione senza accorpamento con variazione della destinazione d’uso')"> Senza accorpamento + variazione d’uso</button>
+        <button class="button" data-aliquota="0.60" onclick="selezionaTipo(this, '0.60', 'Ristrutturazione senza accorpamento senza variazione della destinazione d’uso')">Senza accorpamento senza variazione d’uso</button>
+        <button class="button" data-aliquota="0.70" onclick="selezionaTipo(this, '0.70', 'Ristrutturazione senza interventi sulle strutture portanti con accorpamento e variazione della destinazione d’uso')">Senza interventi sulle strutture portanti con accorpamento + variazione d’uso</button>
+        <button class="button" data-aliquota="0.50" onclick="selezionaTipo(this, '0.50', 'Ristrutturazione senza interventi sulle strutture portanti con accorpamento senza variazione della destinazione d’uso')">Senza interventi sulle strutture portanti con accorpamento senza variazione d’uso</button>
+        <button class="button" data-aliquota="0.50" onclick="selezionaTipo(this, '0.50', 'Ristrutturazione senza interventi sulle strutture portanti e senza accorpamento con variazione della destinazione d’uso')">Senza interventi sulle strutture portanti senza accorpamento + variazione d’uso</button>
+        <button class="button" data-aliquota="0.40" onclick="selezionaTipo(this, '0.40', 'Ristrutturazione senza interventi sulle strutture portanti e senza accorpamento senza variazione della destinazione d’uso')">Senza interventi sulle strutture portanti senza accorpamento senza variazione d’uso</button>
+    </div>
+</div>
+
+<label for="costoComune">Costo di costruzione definito dal Comune (€):</label>
+<select id="costoComune" onchange="aggiornaPrezzo()">
+    <option value="">-- Seleziona --</option>
+    <option value="336.64">Edilizia Residenziale (classe 1)</option>
+    <option value="774.27">Attrezzature turistiche - Alberghi, pensioni e ristoranti</option>
+    <option value="713.67">Attrezzature commerciali - Supermercati e Fiere</option>
+    <option value="501.59">Depositi commerciali per magazzini e vendita delle merci all’ingrosso</option>
+    <option value="774.27">Negozi, bar, pizzerie, tavole calde</option>
+    <option value="774.27">Attrezzature per spettacolo - Cinema, sale da ballo, discoteche</option>
+    <option value="501.59">Attrezzature ricreative di uso privato - Culturali, sindacali, politiche, etc.</option>
+    <option value="676.64">Attrezzature ricreative di uso privato - Sportive e simili</option>
+    <option value="134.65">Attrezzature ricreative di uso privato - Campi sportivi, piscine scoperte</option>
+    <option value="724.27">Impianti connessi al traffico e viabilità</option>
+    <option value="724.27">Distributori carburanti, spazi di deposito di rottami, spazi di deposito o campeggi</option>
+    <option value="599.21">Per le costruzioni di servizio</option>
+    <option value="97.62">Per il piazzale</option>
+    <option value="387.13">Cabine Balneari</option>
+    <option value="724.27">Attrezzature Direzionali – Uffici, sedi di società, banche ed istituti di credito</option>
+</select>
+<span id="prezzoRiferimento"></span>
+
+<div class="row">
+    <div class="inline">
+        <label for="numAlloggi">Numero di Alloggi:</label>
+        <input type="number" id="numAlloggi" placeholder="Inserisci il numero di alloggi">
+    </div>
+    <div class="inline">
+        <label for="supUtile">Sup. Utile Abitabile (mq):</label>
+        <input type="number" id="supUtile" placeholder="Inserisci la superficie utile">
+    </div>
+    <div class="inline">
+        <label for="totSNR">Tot. Snr:</label>
+        <input type="number" id="totSNR" placeholder="Inserisci il Tot. Snr">
+    </div>
+</div>
+
+<div class="row">
+    <div class="inline">
+        <label for="dati">Classi di superfici (mq):</label>
+        <select id="dati" onchange="calcolaIncremento()">
+            <option value="">-- Seleziona --</option>
+            <option value="0">≤ 95</option>
+            <option value="5">> 95 → 110</option>
+            <option value="15">> 110 → 130</option>
+            <option value="30">> 130 → 160</option>
+            <option value="50">> 160</option>
+        </select>
+    </div>
+    <div class="inline">
+        <label for="incremento">% di incremento (art. 5 DM 801/77):</label>
+        <input type="text" id="incremento" value="0" readonly>
+    </div>
+</div>
+
+<div class="inline">
+    <label for="legge25">Legge Regionale 25/22:</label>
+    <select id="legge25">
+        <option value="">-- Seleziona --</option>
+        <option value="0.00">Nessuna LR 25/22</option>
+        <option value="0.50">LR 25/22 zona A</option>
+        <option value="0.80">LR 25/22 altre zone</option>
+    </select>
+</div>
+<br>
+<br>
+<br>
+
+<div id="ediliziaRistrutta" style="display:block;">
+    <label>Seleziona tipo di uso:</label>
+    <div>
+        <button class="button" data-aliquota="0.05" onclick="selezionaUso(this, 0.05, 'Direzionale Commerciale e Turistica')">Direzionale Commerciale e Turistica</button>
+        <button class="button" data-aliquota="0.06" onclick="selezionaUso(this, 0.06, 'Edilizia Residenziale')">Edilizia Residenziale</button>
+    </div>
+</div>
+
+<div style="text-align: left; margin-top: 20px;">
+    <h3>Accessori</h3>
+    <button class="button accessory-button" id="ascensore" onclick="toggleAccessory(this)">Più di un ascensore per scala</button>
+    <button class="button accessory-button" id="scalaServizio" onclick="toggleAccessory(this)">Scala di servizio non prescritta</button>
+    <button class="button accessory-button" id="altezzaInterna" onclick="toggleAccessory(this)">Altezze interne > di cm 270</button>
+    <button class="button accessory-button" id="piscina" onclick="toggleAccessory(this)">Piscina per meno di 15 unità</button>
+    <button class="button accessory-button" id="alloggioCustode" onclick="toggleAccessory(this)">Alloggio custode per < 15 unità</button>
+</div>
+
+<br>
+
+
+<button class="button" id="eseguiBtn" onclick="eseguiCalcoli()">Esegui</button>
+<button class="button" id="resetBtn" onclick="resettaCampi()">Reset</button>
+<button class="button" id="printBtn" onclick="printResults()">Stampa</button>
+
+<table id="risultati" style="display:none;">
+    <thead>
+        <tr>
+            <th>Classi di superfici</th>
+            <th>Alloggi n.</th>
+            <th>Sup. Utile Abitabile (mq)</th>
+            <th>Rapporto rispetto al tot. Su</th>
+            <th>% di incremento</th>
+            <th>Aliquota</th>
+            <th>Tipo di Uso</th>
+            <th class="highlight">i1 -% di incremento per classi di superfici</th>
+            <th>Snr/Su</th>
+            <th>S.C.</th>
+            <th class="highlight">i2</th>
+            <th class="highlight">i3 - Acces.</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+<div id="maggiorazioneSection" style="display:none;">
+    <div class="maggiorazione-container" style="display: flex; justify-content: space-evenly; align-items: center;">
+        <div>
+            <h3>i</h3>
+            <p id="iValue"></p>
+        </div>
+        <div>
+            <h3>Maggiorazione</h3>
+            <p id="maggiorazioneValue"></p>
+        </div>
+        <div>
+            <h3>Costo di Costruzione Maggiorato (€):</h3>
+            <input type="text" id="costoMaggiorato" style="margin: 0;" readonly>
+        </div>
+    </div>
+</div>
+  
+<div class="colonna" style="margin-top: 40px; text-align: center;">
+        <label for="contributoConcessione" style="color: #8b0000; font-size: 1.5em; font-weight: bold;">Contributo di concessione (Cc) (€):</label>
+        <input type="text" id="contributoConcessione" class="contributo" style="color: #8b0000; font-size: 1.5em; text-align: center;" readonly>
+    </div>
+</div>
+
+<!-- Footer -->
+    <div id="footer"> Disclaimer <br>
+
+La presente pagina web è stata creata a scopo puramente ricreativo e di intrattenimento. 
+<br> Le informazioni e i contenuti presenti non hanno valore professionale, ufficiale o vincolante. 
+<br> L'autore non si assume alcuna responsabilità per eventuali errori, omissioni o interpretazioni errate dei contenuti.
+</div>
+
+<script>
+    let aliquotaUso = 0; 
+
+    function selezionaTipo(button, valore, descrizione) {
+        const buttons = document.querySelectorAll("#ediliziaAbitativa .button");
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+    }
+
+    function selezionaUso(button, valore, descrizione) {
+        const buttons = document.querySelectorAll("#ediliziaRistrutta .button");
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+        aliquotaUso = valore; 
+    }
+
+    function aggiornaPrezzo() {
+        const costoComuneSelect = document.getElementById("costoComune");
+        const prezzoRiferimento = costoComuneSelect.options[costoComuneSelect.selectedIndex].value;
+        document.getElementById("prezzoRiferimento").innerText = `Prezzo di riferimento: € ${prezzoRiferimento}`;
+    }
+
+    function calcolaIncremento() {
+        const selezione = document.getElementById("dati").value;
+        document.getElementById("incremento").value = selezione;
+    }
+
+    function eseguiCalcoli() {
+        const numAlloggi = parseFloat(document.getElementById("numAlloggi").value);
+        const supUtile = parseFloat(document.getElementById("supUtile").value);
+        const incremento = parseFloat(document.getElementById("incremento").value);
+        const totSNR = parseFloat(document.getElementById("totSNR").value);
+        const costoComune = parseFloat(document.getElementById("costoComune").value);
+
+        if (isNaN(numAlloggi) || isNaN(supUtile) || isNaN(totSNR) || supUtile <= 0) {
+            alert("Per favore, inserisci valori validi per il numero di alloggi, la superficie utile abitabile e il Tot. Snr.");
+            return;
+        }
+
+        const superficieTotale = numAlloggi * supUtile;
+        const rapporto = (supUtile / superficieTotale).toFixed(2);
+        const aliquota = getAliquota(); 
+        const incrementoClasses = rapporto * incremento;
+        const snrSu = (totSNR / superficieTotale * 100).toFixed(2);
+        const SC = (superficieTotale + (0.6 * totSNR));
+
+        // Calcolo di i2
+        let i2;
+        if (snrSu <= 50) {
+            i2 = 0;
+        } else if (snrSu <= 75) {
+            i2 = 10;
+        } else if (snrSu <= 100) {
+            i2 = 20;
+        } else {
+            i2 = 30;
+        }
+
+        // Calcolo di i3
+        const checkboxes = [document.getElementById("ascensore"), document.getElementById("scalaServizio"), document.getElementById("altezzaInterna"), document.getElementById("piscina"), document.getElementById("alloggioCustode")];
+        const numFlags = checkboxes.filter(checkbox => checkbox.classList.contains('selected')).length; 
+        const i3 = (incrementoClasses + i2) + 10 * numFlags; // Calcola i3
+
+        const tabella = document.getElementById("risultati").getElementsByTagName("tbody")[0];
+        tabella.innerHTML = ""; 
+
+        const row = tabella.insertRow();
+        row.insertCell(0).innerText = document.getElementById("dati").options[document.getElementById("dati").selectedIndex].text; 
+        row.insertCell(1).innerText = numAlloggi;
+        row.insertCell(2).innerText = supUtile;
+        row.insertCell(3).innerText = rapporto;
+        row.insertCell(4).innerText = incremento;
+        row.insertCell(5).innerText = (aliquota >= 0 ? "+" : "") + aliquota; 
+        row.insertCell(6).innerText = aliquotaUso; 
+        row.insertCell(7).innerText = incrementoClasses.toFixed(2); 
+        row.insertCell(8).innerText = snrSu;
+        row.insertCell(9).innerText = SC;
+        row.insertCell(10).innerText = i2; 
+        row.insertCell(11).innerText = i3.toFixed(2); 
+
+        
+        row.cells[7].classList.add("highlight");
+        row.cells[10].classList.add("highlight");
+        row.cells[11].classList.add("highlight");
+
+        document.getElementById("risultati").style.display = "table"; 
+
+        
+        const i = incrementoClasses + i2 + i3;
+        document.getElementById("iValue").innerText = i.toFixed(2);
+
+        let maggiorazione;
+        if (i <= 5) {
+            maggiorazione = 0;
+        } else if (i <= 10) {
+            maggiorazione = 1.05;
+        } else if (i <= 15) {
+            maggiorazione = 1.10;
+        } else if (i <= 20) {
+            maggiorazione = 1.15;
+        } else if (i <= 25) {
+            maggiorazione = 1.20;
+        } else if (i <= 30) {
+            maggiorazione = 1.25;
+        } else if (i <= 35) {
+            maggiorazione = 1.30;
+        } else if (i <= 40) {
+            maggiorazione = 1.35;
+        } else if (i <= 45) {
+            maggiorazione = 1.40;
+        } else if (i <= 50) {
+            maggiorazione = 1.45;
+        } else {
+            maggiorazione = 1.50;
+        }
+        document.getElementById("maggiorazioneValue").innerText = maggiorazione;
+
+        document.getElementById("maggiorazioneSection").style.display = "block"; 
+
+        
+        let costoMaggiorato = costoComune * maggiorazione; 
+
+        
+        if (costoMaggiorato === 0) {
+            costoMaggiorato = costoComune; 
+        }
+
+        document.getElementById("costoMaggiorato").value = costoMaggiorato.toFixed(2);
+
+        
+        const legge25Value = parseFloat(document.getElementById("legge25").value);
+
+        let contributoConcessione;
+
+        if (legge25Value === 0.00) {
+            
+            contributoConcessione = SC * costoMaggiorato * aliquota * aliquotaUso; 
+        } else {
+            
+            contributoConcessione = SC * costoMaggiorato * aliquota * aliquotaUso * legge25Value; 
+        }
+		
+document.getElementById("contributoConcessione").value = new Intl.NumberFormat('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }).format(contributoConcessione);
+      
+        
+        disabilitaCheckboxes(true);
+    }
+
+    function getAliquota() {
+        const tipoEdilizia = document.querySelector(".button.selected");
+        let aliquota = 0;
+
+        if (tipoEdilizia) {
+            aliquota = parseFloat(tipoEdilizia.getAttribute("data-aliquota"));
+        }
+
+        return aliquota; 
+    }
+
+    function resettaCampi() {
+        location.reload(); 
+    }
+
+    function printResults() {
+        const footer = document.getElementById('footer');
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => button.style.display = 'none'); 
+        footer.style.display = 'none'; 
+
+        window.print(); 
+
+        buttons.forEach(button => button.style.display = 'inline-block'); 
+        footer.style.display = 'block'; 
+    }
+
+    function toggleAccessory(button) {
+        button.classList.toggle('selected'); 
+    }
+
+     // conseguenze dei tasti
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            eseguiCalcoli();
+        }
+    });
+</script>
+
+</body>
+</html>

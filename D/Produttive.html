@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="it">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Costruzione - Edilizia Direzionale Commerciale e Turistica</title>
+    <style>
+       body {
+            background: linear-gradient(to bottom, blue, lightblue, white);
+            text-align: center;
+            font-family: Arial, sans-serif;
+            padding: 200px;
+            position: relative;
+            overflow-y: auto;
+        }
+
+        
+        .button {
+            padding: 10px 15px;
+            background-color: #87cefa;
+            border: 1px solid #007BFF;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+            margin: 5px;
+            display: inline-block;
+        }
+
+        .button:hover {
+            background-color: #007BFF;
+            color: white;
+        }
+
+        .button.selected {
+            background-color: #00FF00; 
+        }
+
+        input, select {
+            padding: 10px;
+            margin-top: 5px;
+            width: 400px;
+            font-size: 16px;
+        }
+
+       
+        #footer {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            font-size: 14px;
+            color: black;
+        }
+
+        .inline {
+            display: inline-block;
+            margin-right: 20px;
+        }
+
+        
+        .row {
+            display: flex;
+            justify-content: center;
+            margin-top: 15px;
+        }
+
+        .centered-table {
+        margin: 0 auto; 
+    }
+
+    .centered-table th, .centered-table td {
+        text-align: center; 
+    }
+	table {
+            margin-top: 20px;
+            border-collapse: collapse;
+            width: 100%;
+        }
+
+        th, td {
+            border: 1px solid #ddd;
+            padding: 8px;
+            text-align: left;
+        }
+
+        th {
+            background-color: #f2f2f2;
+        }
+
+        
+        .highlight {
+            background-color: #5F9EA0; 
+        }
+    </style>
+</head>
+<body>
+
+
+
+
+<div style="text-align: left; margin-top: 10px;">
+    <button class="button" id="homeBtn" onclick="location.href='../index.html'">🏠 Home</button>
+</div>
+
+<h1>Calcolo Costo di Costruzione - Edilizia Direzionale Commerciale e Turistica</h1>
+
+
+<div id="ediliziaDirezionale" style="display:block;">
+    <label>Seleziona tipo di edilizia:</label>
+    <div>
+        <button class="button" data-aliquota="0.05" onclick="selezionaTipo(this, '0.05', 'Nuove costruzioni')">Nuove costruzioni</button>
+        <button class="button" data-aliquota="0.05" onclick="selezionaTipo(this, '0.05', 'Interventi sull’esistente')">Interventi sull’esistente</button>
+    </div>
+</div>
+<br>
+
+<label for="costoComune">Costo di costruzione definito dal Comune (€):</label>
+<select id="costoComune" onchange="aggiornaPrezzo()">
+    <option value="">-- Seleziona --</option> <!-- Opzione vuota -->
+    <option value="336.64">Edilizia Residenziale (classe 1)</option>
+    <option value="774.27">Attrezzature turistiche - Alberghi, pensioni e ristoranti</option>
+    <option value="713.67">Attrezzature commerciali - Supermercati e Fiere</option>
+    <option value="501.59">Depositi commerciali per magazzini e vendita delle merci all’ingrosso</option>
+    <option value="774.27">Negozi, bar, pizzerie, tavole calde</option>
+    <option value="774.27">Attrezzature per spettacolo - Cinema, sale da ballo, discoteche</option>
+    <option value="501.59">Attrezzature ricreative di uso privato - Culturali, sindacali, politiche, etc.</option>
+    <option value="676.64">Attrezzature ricreative di uso privato - Sportive e simili</option>
+    <option value="134.65">Attrezzature ricreative di uso privato - Campi sportivi, piscine scoperte</option>
+    <option value="724.27">Impianti connessi al traffico e viabilità</option>
+    <option value="724.27">Distributori carburanti, spazi di deposito di rottami, spazi di deposito o campeggi</option>
+    <option value="599.21">Per le costruzioni di servizio</option>
+    <option value="97.62">Per il piazzale</option>
+    <option value="387.13">Cabine Balneari</option>
+    <option value="724.27">Attrezzature Direzionali – Uffici, sedi di società, banche ed istituti di credito</option>
+</select>
+<span id="prezzoRiferimento"></span>
+
+<div class="horizontal-inputs">
+<label for="numAlloggi">Numero Unità:</label>
+<input type="number" id="numAlloggi" placeholder="Inserisci il numero di unità">
+    <label for="supUtile">Sup. Utile (mq):</label>
+    <input type="number" id="supUtile" placeholder="Inserisci la superficie utile">
+    
+    <label for="totSNR">Tot. Snr:</label>
+    <input type="number" id="totSNR" placeholder="Inserisci il Tot. Snr">
+</div>
+
+<label for="legge25">Legge Regionale 25/22:</label>
+<select id="legge25">
+    <option value="">-- Seleziona --</option> 
+    <option value="0.00">Nessuna LR 25/22</option>
+    <option value="0.50">LR 25/22 zona A</option>
+    <option value="0.80">LR 25/22 altre zone</option>
+</select>
+
+<br>
+<br>
+
+
+<button class="button" id="eseguiBtn" onclick="eseguiCalcoli()">Esegui</button>
+<button class="button" id="resetBtn" onclick="resettaCampi()">Reset</button>
+<button class="button" id="printBtn" onclick="printResults()">Stampa</button>
+
+
+<table id="risultati" class="centered-table" style="display:none;">
+    <thead>
+        <tr>
+            <th>Aliquota</th>
+            <th>S.C.</th>
+        </tr>
+    </thead>
+    <tbody>
+    </tbody>
+</table>
+
+
+<div class="colonna" style="margin-top: 40px; text-align: center;">
+    <label for="contributoConcessione" style="color: #8b0000; font-size: 1.5em; font-weight: bold;">Contributo di concessione (Cc) (€):</label>
+    <input type="text" id="contributoConcessione" class="contributo" style="color: #8b0000; font-size: 1.5em; text-align: center;" readonly>
+</div>
+
+
+    <div id="footer"> Disclaimer <br>
+
+La presente pagina web è stata creata a scopo puramente ricreativo e di intrattenimento. 
+<br> Le informazioni e i contenuti presenti non hanno valore professionale, ufficiale o vincolante. 
+<br> L'autore non si assume alcuna responsabilità per eventuali errori, omissioni o interpretazioni errate dei contenuti.
+</div>
+
+<script>
+    function selezionaTipo(button, valore, descrizione) {
+        const buttons = document.querySelectorAll("#ediliziaDirezionale .button");
+        buttons.forEach(btn => btn.classList.remove('selected'));
+        button.classList.add('selected');
+    }
+
+    function aggiornaPrezzo() {
+        const costoComuneSelect = document.getElementById("costoComune");
+        const prezzoRiferimento = costoComuneSelect.options[costoComuneSelect.selectedIndex].value;
+        document.getElementById("prezzoRiferimento").innerText = `Prezzo di riferimento: € ${prezzoRiferimento}`;
+    }
+
+    function eseguiCalcoli() {
+    const numAlloggi = parseFloat(document.getElementById("numAlloggi").value);
+    const supUtile = parseFloat(document.getElementById("supUtile").value);
+    const totSNR = parseFloat(document.getElementById("totSNR").value);
+    const costoComune = parseFloat(document.getElementById("costoComune").value);
+
+    if (isNaN(numAlloggi) || isNaN(supUtile) || isNaN(totSNR) || supUtile <= 0) {
+        alert("Per favore, inserisci valori validi per il numero di alloggi, la superficie utile abitabile e il Tot. Snr.");
+        return;
+    }
+
+    const superficieTotale = numAlloggi * supUtile;
+    const aliquota = 0.05; // L'aliquota è fissa a 0.05
+    const SC = (superficieTotale + (0.6 * totSNR));
+
+    const tabella = document.getElementById("risultati").getElementsByTagName("tbody")[0];
+    tabella.innerHTML = ""; // Pulisci la tabella precedente
+
+    const row = tabella.insertRow();
+  
+    row.insertCell(0).innerText = aliquota; 
+    row.insertCell(1).innerText = SC; 
+
+    document.getElementById("risultati").style.display = "table"; 
+
+    // Ottenere il valore della Legge 25/22
+    const legge25Value = parseFloat(document.getElementById("legge25").value) || 1; // Imposta 1 se non selezionato
+
+    
+    const contributoConcessione = SC * costoComune * aliquota * legge25Value; 
+
+   document.getElementById("contributoConcessione").value = contributoConcessione.toLocaleString('it-IT', { minimumFractionDigits: 2, maximumFractionDigits: 2 }); 
+
+    
+    disabilitaCheckboxes(true);
+}
+
+
+    function getAliquota() {
+        const tipoEdilizia = document.querySelector(".button.selected");
+        let aliquota = 0;
+
+        if (tipoEdilizia) {
+            aliquota = parseFloat(tipoEdilizia.getAttribute("data-aliquota"));
+        }
+
+        return aliquota; 
+    }
+
+    function resettaCampi() {
+        location.reload(); 
+    }
+
+    function printResults() {
+        const footer = document.getElementById('footer');
+        const buttons = document.querySelectorAll('button');
+        buttons.forEach(button => button.style.display = 'none'); 
+        footer.style.display = 'none'; 
+
+        window.print(); 
+
+        buttons.forEach(button => button.style.display = 'inline-block'); 
+        footer.style.display = 'block'; 
+    }
+
+    function toggleAccessory(button) {
+        button.classList.toggle('selected'); 
+    }
+
+    // conseguenze dei tasti
+    document.addEventListener("keydown", function(event) {
+        if (event.key === "Enter") {
+            eseguiCalcoli();
+        }
+    });
+</script>
+
+</body>
+</html>
